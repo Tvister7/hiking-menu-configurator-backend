@@ -5,8 +5,11 @@ from fastapi.applications import FastAPI
 from loguru import logger
 from starlette.middleware.cors import CORSMiddleware
 
+from core.external.postgres import create_db_and_tables
+
 from .api.app_status import status_router
 from .api.views.meal import meal_router
+from .api.views.user import Routers
 
 app = FastAPI(
     title="Hiking menu",
@@ -28,7 +31,32 @@ logger_config = {
 def create_app():
     logger.configure(**logger_config)
     app.include_router(status_router)
+
+    app.include_router(Routers.auth_router, prefix="/api/auth/jwt", tags=["auth"])
+    app.include_router(
+        Routers.register_router,
+        prefix="/api/auth",
+        tags=["auth"],
+    )
+    app.include_router(
+        Routers.reset_password_router,
+        prefix="/api/auth",
+        tags=["auth"],
+    )
+    app.include_router(
+        Routers.verify_router,
+        prefix="/api/auth",
+        tags=["auth"],
+    )
+    app.include_router(
+        Routers.users_router,
+        prefix="/api/users",
+        tags=["users"],
+    )
+
     app.include_router(meal_router, prefix="/api/base")
+
+    app.add_event_handler("startup", create_db_and_tables)
 
     app.add_middleware(
         CORSMiddleware,
