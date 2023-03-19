@@ -1,32 +1,33 @@
 [tool.poetry]
 name = "hiking-menu-configurator-backend"
-version = "0.0.1"
+version = "0.0.2"
 description = "Back for menu configurator"
 authors = ["Tvister7 <kirzap123@yandex.ru>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-loguru = "^0.5.3"
-pydantic = { extras = ["dotenv"], version = "^1.6.1" }
-fastapi = "^0.75.2"
-uvicorn = "^0.17.6"
-sqlmodel = "^0.0.6"
-asyncpg = "^0.25.0"
+python = "^3.11"
+pydantic = { extras = ["dotenv"], version = "^1.10.6" }
+fastapi = "^0.95.0"
+uvicorn = "^0.21.1"
+asyncpg = "^0.27.0"
+sqlalchemy = "^2.0.7"
+loguru = "^0.6.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = { version = "*", allow-prereleases = true }
-bumpversion = "^0.5.3"
-flake8 = "^3.7"
-mypy = "^0.761.0"
-rope = "^0.16.0"
-bandit = "^1.6.2"
-python-dateutil = "^2.8.1"
-pytest-cov = "^2.10.1"
-tqdm = "^4.54.1"
-isort = "^5.7.0"
-flake8-eradicate = "^1.0.0"
-flake8-print = "^4.0.0"
-flake8-use-fstring = "^1.1.0"
+ruff = "^0.0.257"
+# bumpversion = "^0.5.3"
+# flake8 = "^3.7"
+# mypy = "^0.761.0"
+# rope = "^0.16.0"
+# bandit = "^1.6.2"
+# python-dateutil = "^2.8.1"
+# pytest-cov = "^2.10.1"
+# tqdm = "^4.54.1"
+# isort = "^5.7.0"
+# flake8-eradicate = "^1.0.0"
+# flake8-print = "^4.0.0"
+# flake8-use-fstring = "^1.1.0"
 
 [tool.pylint]
 extension-pkg-whitelist = ["orjson"]
@@ -40,36 +41,85 @@ disable = [
     "missing-module-docstring"
 ]
 
-[tool.bandit]
-skips = ["B601"]
+[tool.ruff]
+# Enable Pyflakes `E` and `F` codes by default.
+select = ["E", "F"]
+ignore = []
 
-[tool.black]
-py36 = true
-include = '\.pyi?$'
-exclude = '''
-/(
-    \.git
-  | \.hg
-  | \.mypy_cache
-  | \.pytest_cache
-  | \.vscode
-  | \.tox
-  | \.venv
-  | _build
-  | buck-out
-  | build
-  | dist
-)/
-'''
+target-version = "py311"
+src = ["src", "test"]
 
-[tool.isort]
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["A", "B", "C", "D", "E", "F", "..."]
+unfixable = []
+
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+]
+per-file-ignores = {}
+
+# Same as Black.
+line-length = 88
+
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.mccabe]
+max-complexity = 12
+
+[tool.ruff.flake8-quotes]
+docstring-quotes = "double"
+
+[tool.ruff.isort]
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
 ensure_newline_before_comments = true
 line_length = 88
+classes = ["SVC"]
+
+# [tool.bandit]
+# skips = ["B601"]
+
+# [tool.black]
+# py311 = true
+# include = '\.pyi?$'
+# exclude = '''
+# /(
+#     \.git
+#   | \.hg
+#   | \.mypy_cache
+#   | \.pytest_cache
+#   | \.vscode
+#   | \.tox
+#   | \.venv
+#   | _build
+#   | buck-out
+#   | build
+#   | dist
+# )/
+# '''
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
+requires = ["poetry-core>=1.2.0"]
 build-backend = "poetry.core.masonry.api"
