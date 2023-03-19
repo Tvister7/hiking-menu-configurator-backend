@@ -3,13 +3,13 @@ from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
-from ..settings import settings
+from ..settings.db_settings import settings
 
 
 class Engine:
     def __init__(self):
         self.engine = create_async_engine(
-            url=settings.postgres_url,
+            url=settings.get_pg_url(),
             pool_size=1,
             pool_recycle=3600,
             connect_args={"server_settings": {"jit": "off"}},
