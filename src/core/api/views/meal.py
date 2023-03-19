@@ -1,7 +1,7 @@
 # from fastapi.param_functions import Depends  # noqa
 from fastapi.routing import APIRouter
 
-from core.api.models.meal import Meal
+from core.api.models.meals.meal import Meal
 
 from ..controllers.meal import get_all_meals_controller
 
