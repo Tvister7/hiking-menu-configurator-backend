@@ -11,18 +11,15 @@ class Settings(BaseSettings):
     url: str | None = None
 
     class Config:
-        env_file = ".env.example"
+        env_file = ".env"
         env_file_encoding = "utf-8"
-        prefix = "postgres_"
+        env_prefix = "postgres_"
 
     def get_pg_url(self) -> str:
         if self.url:
             return self.url
 
-        url = (
-            f"asyncpg+postgresql://{self.user}:"
-            f"{self.password}@{self.host}:{self.port}/"
-        )
+        url = f"postgresql://{self.user}:" f"{self.password}@{self.host}:{self.port}/"
 
         if self.initial_db:
             url += f"{self.initial_db}"

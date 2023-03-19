@@ -10,10 +10,9 @@ pydantic = { extras = ["dotenv"], version = "^1.10.6" }
 fastapi = "^0.95.0"
 uvicorn = "^0.21.1"
 asyncpg = "^0.27.0"
-sqlalchemy = "^2.0.7"
 loguru = "^0.6.0"
-python-jose = {extras = ["cryptography"], version = "^3.3.0"}
-passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+fastapi-users = {extras = ["sqlalchemy"], version = "^10.4.1"}
+sqlalchemy = "^2.0.7"
 
 [tool.poetry.group.dev.dependencies]
 black = { version = "*", allow-prereleases = true }

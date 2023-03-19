@@ -1,16 +1,10 @@
+from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTableUUID
 from sqlalchemy import String
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
+
+from core.api.models.common import Base
 
 
-class Base(DeclarativeBase):
-    pass
-
-
-class DBUser(Base):
+class DBUser(SQLAlchemyBaseUserTableUUID, Base):
     __tablename__ = "users"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    email: Mapped[str] = mapped_column(String(255))
-    username: Mapped[str] = mapped_column(String(255), default=None)
-    fullname: Mapped[str | None] = mapped_column(String(255), default=None)
-    hashed_password: Mapped[str] = mapped_column(String(2047))
+    username: Mapped[str | None] = mapped_column(String(255), default=None)

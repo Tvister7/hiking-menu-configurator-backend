@@ -1,7 +1,14 @@
+from typing import Annotated, AsyncGenerator
+
+from fastapi import Depends
 from loguru import logger
-from sqlalchemy import MetaData
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+
+from core.api.models.common import Base
 
 from ..settings.db_settings import settings
 
@@ -16,14 +23,23 @@ class Engine:
             echo=True,
         )
 
-        self.session = sessionmaker(
+        self.session = async_sessionmaker(
             self.engine, class_=AsyncSession, expire_on_commit=False  # type: ignore
         )
 
-    async def _create_tables(self):
-        async with self.engine.begin() as conn:
-            await conn.run_sync(MetaData().create_all)
-            logger.info("Tables were created!")
-
 
 engine = Engine()
+
+
+async def create_db_and_tables():
+    async with engine.engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+        logger.info("Tables were created!")
+
+
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
+    async with engine.session() as session:
+        yield session
+
+
+AnnotatedSession = Annotated[AsyncSession, Depends(get_session)]
