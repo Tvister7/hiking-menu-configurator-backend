@@ -1,0 +1,36 @@
+version: "3.9"
+
+volumes:
+  postgres_hiking:
+
+networks:
+  hiking:
+
+services:
+  db:
+    image: postgres:15.2-bullseye
+    command:
+      ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
+    restart: always
+
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_hiking:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - hiking
+
+  worker:
+    container_name: hiking_app
+    build: .
+    volumes:
+      - ./:/app
+    command: ["poetry", "run", "python", "src"]
+    depends_on:
+      - db
+    networks:
+      - hiking
