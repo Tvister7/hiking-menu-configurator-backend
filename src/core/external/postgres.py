@@ -1,14 +1,13 @@
 from loguru import logger
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-from sqlmodel import SQLModel
 
 from ..settings import settings
 
 
 class Engine:
     def __init__(self):
-
         self.engine = create_async_engine(
             url=settings.postgres_url,
             pool_size=1,
@@ -23,7 +22,7 @@ class Engine:
 
     async def _create_tables(self):
         async with self.engine.begin() as conn:
-            await conn.run_sync(SQLModel.metadata.create_all)
+            await conn.run_sync(MetaData().create_all)
             logger.info("Tables were created!")
 
 

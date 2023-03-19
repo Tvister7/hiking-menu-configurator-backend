@@ -4,4 +4,4 @@ from core.create_app import create_app
 from core.settings import settings
 
 if __name__ == "__main__":
-    run_fastapi(create_app(), host=settings.host)  # type: ignore
+    run_fastapi(create_app(), host=settings.host)
